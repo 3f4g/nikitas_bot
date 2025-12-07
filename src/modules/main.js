@@ -1,6 +1,9 @@
+import { loadConfig } from "../utils/config.js";
 import { mainMenuPanel } from "./panels/MainMenuPanel.js";
 
 export function setupMain(bot) {
+  const config = loadConfig();
+
   bot.start((ctx) => {
     ctx.reply("Что тебя интересует?", mainMenuPanel);
   });
@@ -10,10 +13,10 @@ export function setupMain(bot) {
   });
 
   bot.action("support", (ctx) => {
-    ctx.editMessageText("Техподдержка: @your_support", mainMenuPanel);
+    ctx.editMessageText(`Техподдержка: ${config.supportUrl}`, mainMenuPanel);
   });
 
   bot.action("channel", (ctx) => {
-    ctx.editMessageText("Наш канал: https://t.me/your_channel", mainMenuPanel);
+    ctx.editMessageText(`Наш канал: ${config.channelUrl}`, mainMenuPanel);
   });
 }

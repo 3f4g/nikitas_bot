@@ -1,10 +1,9 @@
 {
   "trialDurationDays": 20,
   "subscriptionDurationDays": 30,
-  "demoChannelUrl": "https://t.me/example",
-  "reviewsUrl": "https://t.me/reviews",
-  "subscriptionDescription": "Описание подписки по умолчанию",
-  "admins": [
-    5346481187
-  ]
+  "channelUrl": "https://t.me/demoChannelUrl",
+  "reviewsUrl": "https://t.me/reviewsDemo",
+  "supportUrl": "@some_support_url",
+  "subscriptionDescription": "<b>Оплатив подписку, ты получишь:</b>\n\n⚡ Тестовое описание подписки.\n\n<i>*Активируй демо-версию и познакомься бесплатно</i>",
+  "admins": [5346481187]
 }

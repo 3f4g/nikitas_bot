@@ -20,12 +20,10 @@ bot.use((ctx, next) => {
 
 bot.use(session());
 
-// setupAdmin(bot);
 setupAuth(bot);
 setupMain(bot);
 setupSubscription(bot);
 setupDemo(bot);
-
 setupAdmin(bot);
 
 bot.command("secret", withAccess((ctx) => {

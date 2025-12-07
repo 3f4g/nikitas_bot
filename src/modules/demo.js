@@ -1,23 +1,22 @@
 import { Markup } from "telegraf";
 import db from "../db/db.js";
 import { mainMenuPanel } from "./panels/MainMenuPanel.js";
+import { loadConfig } from "../utils/config.js";
 
-const DEMO_CHANNEL_ID = process.env.DEMO_CHANNEL_ID;
-const DEMO_CHANNEL_URL = process.env.DEMO_CHANNEL_URL;
+const config = loadConfig();
 
 const demoKeyboard = Markup.inlineKeyboard([
   [
     Markup.button.callback("Проверить", "demo_check"),
-    Markup.button.url(
-      "Подписаться",
-      DEMO_CHANNEL_URL || "https://t.me/your_channel"
-    ),
+    Markup.button.url("Подписаться", config.DEMO_CHANNEL_URL || ""),
   ],
   [Markup.button.callback("Назад", "demo_back")],
 ]);
 
 function giveTrial(userId) {
-  const expiresAt = Date.now() + 30 * 24 * 60 * 60 * 1000;
+  const { trialDurationDays } = config;
+
+  const expiresAt = Date.now() + trialDurationDays * 24 * 60 * 60 * 1000;
   db.prepare(
     `
     INSERT INTO users (id, expiresAt)
@@ -43,7 +42,7 @@ export function setupDemo(bot) {
 
     let member;
     try {
-      member = await ctx.telegram.getChatMember(DEMO_CHANNEL_ID, userId);
+      member = await ctx.telegram.getChatMember(config.DEMO_CHANNEL_ID, userId);
     } catch {
       member = null;
     }
