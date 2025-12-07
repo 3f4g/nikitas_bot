@@ -1,10 +1,10 @@
 import { Telegraf } from "telegraf";
 import dotenv from "dotenv";
-import { setupAuth, withAccess } from "./src/models/auth.js";
-import { setupMain } from "./src/models/main.js";
-import { setupSubscription } from "./src/models/subscription.js";
-import { setupDemo } from "./src/models/demo.js";
-import { setupAdmin } from "./src/models/admin.js";
+import { setupAuth, withAccess } from "./src/modules/auth.js";
+import { setupMain } from "./src/modules/main.js";
+import { setupSubscription } from "./src/modules/subscription.js";
+import { setupDemo } from "./src/modules/demo.js";
+import { setupAdmin } from "./src/modules/admin.js";
 
 import { session } from 'telegraf';
 
