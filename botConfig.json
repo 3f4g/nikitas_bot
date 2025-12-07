@@ -1,0 +1,10 @@
+{
+  "trialDurationDays": 20,
+  "subscriptionDurationDays": 30,
+  "demoChannelUrl": "https://t.me/example",
+  "reviewsUrl": "https://t.me/reviews",
+  "subscriptionDescription": "Описание подписки по умолчанию",
+  "admins": [
+    5346481187
+  ]
+}

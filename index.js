@@ -1,0 +1,42 @@
+import { Telegraf } from "telegraf";
+import dotenv from "dotenv";
+import { setupAuth, withAccess } from "./src/models/auth.js";
+import { setupMain } from "./src/models/main.js";
+import { setupSubscription } from "./src/models/subscription.js";
+import { setupDemo } from "./src/models/demo.js";
+import { setupAdmin } from "./src/models/admin.js";
+
+import { session } from 'telegraf';
+
+
+dotenv.config();
+
+const bot = new Telegraf(process.env.BOT_TOKEN);
+
+bot.use((ctx, next) => {
+  console.log("EVENT:", ctx.updateType, ctx.message?.text);
+  return next();
+});
+
+bot.use(session());
+
+// setupAdmin(bot);
+setupAuth(bot);
+setupMain(bot);
+setupSubscription(bot);
+setupDemo(bot);
+
+setupAdmin(bot);
+
+bot.command("secret", withAccess((ctx) => {
+  ctx.reply("🔐 Секретный контент доступен Вам!");
+}));
+
+bot.command("profile", withAccess((ctx) => {
+  ctx.reply("Ваш профиль доступен.");
+}));
+
+bot.launch();
+
+process.once("SIGINT", () => bot.stop("SIGINT"));
+process.once("SIGTERM", () => bot.stop("SIGTERM"));
