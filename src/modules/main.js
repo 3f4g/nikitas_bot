@@ -1,22 +1,35 @@
 import { loadConfig } from "../utils/config.js";
 import { mainMenuPanel } from "./panels/MainMenuPanel.js";
+import { safeCall } from "../utils/safeCall.js";
 
 export function setupMain(bot) {
-  const config = loadConfig();
-
-  bot.start((ctx) => {
-    ctx.reply("Что тебя интересует?", mainMenuPanel);
+  bot.start(async (ctx) => {
+    await safeCall(
+      ctx.reply("Что тебя интересует?", mainMenuPanel),
+      "main.start reply"
+    );
   });
 
-  bot.action("reviews", (ctx) => {
-    ctx.editMessageText("Отзывы пока в разработке", mainMenuPanel);
+  bot.action("reviews", async (ctx) => {
+    await safeCall(
+      ctx.editMessageText("Отзывы пока в разработке", mainMenuPanel),
+      "main.reviews edit"
+    );
   });
 
-  bot.action("support", (ctx) => {
-    ctx.editMessageText(`Техподдержка: ${config.supportUrl}`, mainMenuPanel);
+  bot.action("support", async (ctx) => {
+    const { supportUrl } = loadConfig();
+    await safeCall(
+      ctx.editMessageText(`Техподдержка: ${supportUrl}`, mainMenuPanel),
+      "main.support edit"
+    );
   });
 
-  bot.action("channel", (ctx) => {
-    ctx.editMessageText(`Наш канал: ${config.channelUrl}`, mainMenuPanel);
+  bot.action("channel", async (ctx) => {
+    const { channelUrl } = loadConfig();
+    await safeCall(
+      ctx.editMessageText(`Наш канал: ${channelUrl}`, mainMenuPanel),
+      "main.channel edit"
+    );
   });
 }

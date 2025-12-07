@@ -5,9 +5,8 @@ import { setupMain } from "./src/modules/main.js";
 import { setupSubscription } from "./src/modules/subscription.js";
 import { setupDemo } from "./src/modules/demo.js";
 import { setupAdmin } from "./src/modules/admin.js";
-
-import { session } from 'telegraf';
-
+import { session } from "telegraf";
+import { safeCall } from "./src/utils/safeCall.js";
 
 dotenv.config();
 
@@ -26,15 +25,28 @@ setupSubscription(bot);
 setupDemo(bot);
 setupAdmin(bot);
 
-bot.command("secret", withAccess((ctx) => {
-  ctx.reply("🔐 Секретный контент доступен Вам!");
-}));
+bot.command(
+  "secret",
+  withAccess(async (ctx) => {
+    await safeCall(
+      ctx.reply("🔐 Секретный контент доступен Вам!"),
+      "secret.reply"
+    );
+  })
+);
 
-bot.command("profile", withAccess((ctx) => {
-  ctx.reply("Ваш профиль доступен.");
-}));
+bot.command(
+  "profile",
+  withAccess(async (ctx) => {
+    await safeCall(ctx.reply("Ваш профиль доступен."), "profile.reply");
+  })
+);
 
-bot.launch();
+bot.catch((err) => {
+  console.log("GLOBAL ERROR:", err.description || err);
+});
+
+safeCall(bot.launch(), "bot.launch");
 
 process.once("SIGINT", () => bot.stop("SIGINT"));
 process.once("SIGTERM", () => bot.stop("SIGTERM"));
