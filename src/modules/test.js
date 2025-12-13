@@ -85,21 +85,35 @@ export function setupMaterials(bot) {
     // === Добавление вопроса ===
     if (ctx.session.addingQuestion) {
       // FRONT TEXT
-      if (ctx.session.expectingFrontText) {
-        ctx.session.frontText = msg;
-        ctx.session.expectingFrontText = false;
-        ctx.session.expectingFrontImage = true;
+    //   if (ctx.session.expectingFrontText) {
+    //     ctx.session.frontText = msg;
+    //     ctx.session.expectingFrontText = false;
+    //     ctx.session.expectingFrontImage = true;
 
-        await safeCall(
-          ctx.reply("Отправьте изображение для FRONT или /skip"),
-          "materials.question.askFrontImage"
-        );
+    //     await safeCall(
+    //       ctx.reply("Отправьте изображение для FRONT или /skip"),
+    //       "materials.question.askFrontImage"
+    //     );
 
-        return;
-      }
+    //     return;
+    //   }
+    // FRONT TEXT
+if (ctx.session.addingQuestion && ctx.session.expectingFrontText) {
+  ctx.session.frontText = msg;
+
+  ctx.session.expectingFrontText = false;
+  ctx.session.expectingFrontImage = true; // <-- обязательная строка!
+
+  await safeCall(
+    ctx.reply("Отправьте изображение для FRONT или /skip"),
+    "materials.question.askFrontImage"
+  );
+
+  return;
+}
 
       // BACK TEXT
-      if (ctx.session.expectingBackText) {
+      if (ctx.session.addingQuestion && ctx.session.expectingBackText) {
         ctx.session.backText = msg;
         ctx.session.expectingBackText = false;
         ctx.session.expectingBackImage = true;
@@ -149,28 +163,61 @@ export function setupMaterials(bot) {
   // ==========================
   // /skip обработчик
   // ==========================
-  bot.command("skip", async (ctx) => {
-    ensureSession(ctx);
+//   bot.command("skip", async (ctx) => {
+//     ensureSession(ctx);
 
-    // skip FRONT IMAGE
-    if (ctx.session.expectingFrontImage) {
-      ctx.session.frontImageId = null;
-      ctx.session.expectingFrontImage = false;
-      ctx.session.expectingBackText = true;
+//     // skip FRONT IMAGE
+//     if (ctx.session.expectingFrontImage) {
+//       ctx.session.frontImageId = null;
+//       ctx.session.expectingFrontImage = false;
+//       ctx.session.expectingBackText = true;
 
-      await safeCall(ctx.reply("Введите текст BACK:"), "skip.frontImage");
-      return;
-    }
+//       await safeCall(ctx.reply("Введите текст BACK:"), "skip.frontImage");
+//       return;
+//     }
 
-    // skip BACK IMAGE
-    if (ctx.session.expectingBackImage) {
-      ctx.session.backImageId = null;
-      ctx.session.expectingBackImage = false;
+//     // skip BACK IMAGE
+//     if (ctx.session.expectingBackImage) {
+//       ctx.session.backImageId = null;
+//       ctx.session.expectingBackImage = false;
 
-      await saveQuestion(ctx);
-      return;
-    }
-  });
+//       await saveQuestion(ctx);
+//       return;
+//     }
+//   });
+
+bot.command("skip", async (ctx) => {
+  ensureSession(ctx);
+
+  if (!ctx.session.addingQuestion) {
+    await safeCall(ctx.reply("Сейчас пропускать нечего."), "skip.nothing");
+    return;
+  }
+
+  // === SKIP FRONT IMAGE ===
+  if (ctx.session.expectingFrontImage) {
+    ctx.session.frontImageId = null;
+    ctx.session.expectingFrontImage = false;
+    ctx.session.expectingBackText = true;
+
+    await safeCall(
+      ctx.reply("Введите текст BACK:"),
+      "skip.frontImage"
+    );
+    return;
+  }
+
+  // === SKIP BACK IMAGE ===
+  if (ctx.session.expectingBackImage) {
+    ctx.session.backImageId = null;
+    ctx.session.expectingBackImage = false;
+
+    await saveQuestion(ctx);
+    return;
+  }
+
+  await safeCall(ctx.reply("Сейчас пропускать нечего."), "skip.nothing");
+});
 
   // ==========================
   // НАЧАТЬ ДОБАВЛЕНИЕ ВОПРОСА
@@ -457,16 +504,28 @@ export function setupMaterials(bot) {
     ctx.session.testId = state.testId;
 
     // запускаем процесс добавления вопроса
-    ctx.session.addingQuestion = true;
-    ctx.session.expectingFrontText = true;
-    ctx.session.expectingFrontImage = false;
-    ctx.session.expectingBackText = false;
-    ctx.session.expectingBackImage = false;
+    // ctx.session.addingQuestion = true;
+    // ctx.session.expectingFrontText = true;
+    // ctx.session.expectingFrontImage = false;
+    // ctx.session.expectingBackText = false;
+    // ctx.session.expectingBackImage = false;
 
-    ctx.session.frontText = null;
-    ctx.session.backText = null;
-    ctx.session.frontImageId = null;
-    ctx.session.backImageId = null;
+    // ctx.session.frontText = null;
+    // ctx.session.backText = null;
+    // ctx.session.frontImageId = null;
+    // ctx.session.backImageId = null;
+
+    ctx.session.addingQuestion = true;
+
+ctx.session.expectingFrontText = true;
+ctx.session.expectingFrontImage = false; // станет true после фронт-текста
+ctx.session.expectingBackText = false;   // станет true после фронт-изображения
+ctx.session.expectingBackImage = false;  // станет true после бэк-текста
+
+ctx.session.frontText = null;
+ctx.session.backText = null;
+ctx.session.frontImageId = null;
+ctx.session.backImageId = null;
 
     await safeCall(
       ctx.reply("Введите текст FRONT для нового вопроса:"),
