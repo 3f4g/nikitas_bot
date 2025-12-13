@@ -20,7 +20,6 @@ const backButton = Markup.inlineKeyboard([
   [Markup.button.callback("Вернуться назад 👀", "sub_back")],
 ]);
 
-
 export function setupSubscription(bot) {
   bot.action("open_subscription", async (ctx) => {
     await safeCall(ctx.answerCbQuery(), "open_subscription.answerCbQuery");
@@ -109,6 +108,7 @@ export function setupSubscription(bot) {
             [{ text: "Отзывы ☁️", callback_data: "reviews" }],
             [{ text: "Тех. Поддержка ⚒️", callback_data: "support" }],
             [{ text: "Telegram-канал 💅", callback_data: "channel" }],
+            [Markup.button.callback("Тесты", "tests")],
           ],
         },
       }),

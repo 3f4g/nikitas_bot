@@ -150,45 +150,6 @@ export function setupDemo(bot) {
     );
   });
 
-  //   bot.action("demo_check", async (ctx) => {
-  //     //-1003391733372
-  //     const chat = await bot.telegram.getChat('@ehwjdjjd');
-  // console.log(chat.id);
-
-  //     await safeCall(ctx.answerCbQuery(), "demo_check.answerCbQuery");
-
-  //     const userId = ctx.from.id;
-
-  //     let member;
-  //     try {
-  //       member = await ctx.telegram.getChatMember(channelId, userId);
-  //     } catch {
-  //       member = null;
-  //     }
-
-  //     if (!member || member.status === "left" || member.status === "kicked") {
-  //       await safeCall(
-  //         ctx.editMessageText(
-  //           "Похоже, вы ещё не подписались на канал. Подпишитесь и нажмите «Проверить» ещё раз.",
-  //           demoKeyboard
-  //         ),
-  //         "demo_check.notSubscribed"
-  //       );
-  //       return;
-  //     }
-
-  //     const expiresAt = giveTrial(userId);
-  //     const date = new Date(expiresAt).toLocaleString("ru-RU");
-
-  //     await safeCall(
-  //       ctx.editMessageText(`Пробная подписка активирована до:\n<b>${date}</b>`, {
-  //         reply_markup: mainMenuPanel,
-  //         parse_mode: "HTML",
-  //       }),
-  //       "demo_check.success"
-  //     );
-  //   });
-
   bot.action("demo_back", async (ctx) => {
     await safeCall(ctx.answerCbQuery(), "demo_back.answerCbQuery");
 
