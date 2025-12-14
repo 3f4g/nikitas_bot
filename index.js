@@ -9,6 +9,7 @@ import { session } from "telegraf";
 import { safeCall } from "./src/utils/safeCall.js";
 import { setupMaterials } from "./src/modules/test.js";
 import { setupTests } from "./src/modules/testsDisplay.js";
+import { setupAdminSubscriptions } from "./src/modules/adminSubscriptions.js";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ setupMain(bot);
 setupSubscription(bot);
 setupDemo(bot);
 setupAdmin(bot);
+setupAdminSubscriptions(bot)
 setupMaterials(bot)
 setupTests(bot)
 

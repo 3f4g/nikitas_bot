@@ -31,4 +31,16 @@ db.exec(`
   );
 `);
 
+
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS subscriptions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    price INTEGER NOT NULL,
+    durationDays INTEGER NOT NULL
+  );
+`);
+
+
 export default db;
